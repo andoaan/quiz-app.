@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Belajar Interaktif dengan Timer</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+      background: linear-gradient(to right, #6dd5ed, #2193b0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+    }
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      width: 90%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 2px solid #2193b0;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 25px;
+      border: none;
+      background-color: #2193b0;
+      color: white;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #176c8c;
+    }
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    #timer {
+      font-size: 18px;
+      color: red;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <img id="image" src="" alt="Gambar Soal">
+  <h2 id="question">Pertanyaan akan muncul di sini</h2>
+
+  <div id="timer">Waktu: 15 detik</div>
+
+  <input type="text" id="answer" placeholder="Tulis jawabanmu di sini" />
+  <br>
+  <button onclick="checkAnswer()">Cek Jawaban</button>
+
+  <div id="result"></div>
+</div>
+
+<script>
+const questions = [
+  {
+    question: "Apa ibu kota Indonesia?",
+    answer: "Jakarta",
+    image: "images/monas.jpg"
+  },
+  {
+    question: "Apa gunung tertinggi di Indonesia?",
+    answer: "Puncak Jaya",
+    image: "images/puncakjaya.jpg"
+  },
+  {
+    question: "Siapa proklamator kemerdekaan Indonesia?",
+    answer: "Soekarno",
+    image: "images/soekarno.jpg"
+  }
+];
+
+let currentQuestion = 0;
+let timeLeft = 15;
+let timerInterval;
+
+function showQuestion() {
+  document.getElementById("question").textContent = questions[currentQuestion].question;
+  document.getElementById("image").src = questions[currentQuestion].image;
+  document.getElementById("answer").value = "";
+  document.getElementById("result").textContent = "";
+  resetTimer();
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timeLeft = 15;
+  document.getElementById("timer").textContent = `Waktu: ${timeLeft} detik`;
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").textContent = `Waktu: ${timeLeft} detik`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      autoNext();
+    }
+  }, 1000);
+}
+
+function checkAnswer() {
+  const userAnswer = document.getElementById("answer").value.trim();
+  const result = document.getElementById("result");
+
+  if (userAnswer.toLowerCase() === questions[currentQuestion].answer.toLowerCase()) {
+    result.textContent = "Benar! 🎉";
+    result.style.color = "green";
+    clearInterval(timerInterval);
+    setTimeout(() => {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        endQuiz();
+      }
+    }, 1000);
+  } else {
+    result.textContent = "Salah. Coba lagi! ❌";
+    result.style.color = "red";
+  }
+}
+
+function autoNext() {
+  document.getElementById("result").textContent = "Waktu habis! ⏰";
+  document.getElementById("result").style.color = "orange";
+  setTimeout(() => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  document.querySelector(".card").innerHTML = "<h2>Selamat! Kamu sudah menyelesaikan semua soal! 🎉</h2>";
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
