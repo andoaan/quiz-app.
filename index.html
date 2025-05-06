@@ -126,8 +126,16 @@ function resetTimer() {
 }
 
 function checkAnswer() {
-  const userAnswer = document.getElementById("answer").value.trim();
-  const result = document.getElementById("result");
+ if (userAnswer.toLowerCase() === questions[currentQuestion].answer.toLowerCase()) {
+  score++;
+  result.textContent = "Benar! 🎉";
+  result.style.color = "green";
+  benarAudio.play(); // mainkan suara benar
+} else {
+  result.textContent = "Salah ❌";
+  result.style.color = "red";
+  salahAudio.play(); // mainkan suara salah
+}
 
   if (userAnswer.toLowerCase() === questions[currentQuestion].answer.toLowerCase()) {
     result.textContent = "Benar! 🎉";
@@ -166,6 +174,8 @@ function endQuiz() {
 
 showQuestion();
 </script>
+<audio id="benar-audio" src="audio/correct-answer.mp3"></audio>
+<audio id="salah-audio" src="audio/wrong-answer.mp3"></audio>
 
 </body>
 </html>
